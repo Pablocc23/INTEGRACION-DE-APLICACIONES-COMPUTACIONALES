@@ -1,0 +1,116 @@
+service: mobile-banking-hybrid-cloud
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  stage: ${opt:stage, 'dev'}
+  region: us-east-1
+  environment:
+    NODE_ENV: ${self:provider.stage}
+    AWS_REGION: ${self:provider.region}
+    JWT_SECRET: ${env:JWT_SECRET, 'ejemplo_secreto'}
+    MONGODB_URI: ${env:MONGODB_URI, 'mongodb://localhost:27017/mobile-banking'}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource: "arn:aws:dynamodb:${self:provider.region}:*:table/*"
+    - Effect: Allow
+      Action:
+        - sns:Publish
+        - sns:CreateTopic
+      Resource: "*"
+    - Effect: Allow
+      Action:
+        - ses:SendEmail
+        - ses:SendRawEmail
+      Resource: "*"
+
+plugins:
+  - serverless-offline
+  - serverless-dotenv-plugin
+
+functions:
+  auth:
+    handler: src/handlers/auth-simple.handler
+    events:
+      - http:
+          path: /auth/{proxy+}
+          method: ANY
+          cors: true
+    environment:
+      FUNCTION_TYPE: auth
+      JWT_SECRET: ${env:JWT_SECRET, 'tu_jwt_secret_muy_seguro_aqui_cambiar_en_produccion'}
+      MONGODB_URI: ${env:MONGODB_URI, 'mongodb://localhost:27017/mobile-banking'}
+
+  account:
+    handler: src/handlers/account-simple.handler
+    events:
+      - http:
+          path: /account/{proxy+}
+          method: ANY
+          cors: true
+    environment:
+      FUNCTION_TYPE: account
+      JWT_SECRET: ${env:JWT_SECRET, 'tu_jwt_secret_muy_seguro_aqui_cambiar_en_produccion'}
+      MONGODB_URI: ${env:MONGODB_URI, 'mongodb://localhost:27017/mobile-banking'}
+
+  transfers:
+    handler: src/handlers/transfers-simple.handler
+    events:
+      - http:
+          path: /transfers/{proxy+}
+          method: ANY
+          cors: true
+    environment:
+      FUNCTION_TYPE: transfers
+      JWT_SECRET: ${env:JWT_SECRET, 'tu_jwt_secret_muy_seguro_aqui_cambiar_en_produccion'}
+      MONGODB_URI: ${env:MONGODB_URI, 'mongodb://localhost:27017/mobile-banking'}
+
+  notifications:
+    handler: src/handlers/notifications-simple.handler
+    events:
+      - http:
+          path: /notifications/{proxy+}
+          method: ANY
+          cors: true
+    environment:
+      FUNCTION_TYPE: notifications
+      JWT_SECRET: ${env:JWT_SECRET, 'tu_jwt_secret_muy_seguro_aqui_cambiar_en_produccion'}
+      MONGODB_URI: ${env:MONGODB_URI, 'mongodb://localhost:27017/mobile-banking'}
+
+  payments:
+    handler: src/handlers/payments-simple.handler
+    events:
+      - http:
+          path: /payments/{proxy+}
+          method: ANY
+          cors: true
+    environment:
+      FUNCTION_TYPE: payments
+      JWT_SECRET: ${env:JWT_SECRET, 'tu_jwt_secret_muy_seguro_aqui_cambiar_en_produccion'}
+      MONGODB_URI: ${env:MONGODB_URI, 'mongodb://localhost:27017/mobile-banking'}
+
+  reports:
+    handler: src/handlers/reports-simple.handler
+    events:
+      - http:
+          path: /reports/{proxy+}
+          method: ANY
+          cors: true
+    environment:
+      FUNCTION_TYPE: reports
+      JWT_SECRET: ${env:JWT_SECRET, 'tu_jwt_secret_muy_seguro_aqui_cambiar_en_produccion'}
+      MONGODB_URI: ${env:MONGODB_URI, 'mongodb://localhost:27017/mobile-banking'}
+
+custom:
+  serverless-offline:
+    httpPort: 3001
+    host: localhost
