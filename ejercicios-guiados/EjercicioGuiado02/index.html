@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chat IA Local</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #43cea2, #185a9d);
+      margin: 0; height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .chat {
+      width: 90%; max-width: 800px; height: 80vh;
+      background: #fff; border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.15);
+      display: flex; flex-direction: column; overflow: hidden;
+    }
+    header {
+      background: #185a9d; color: #fff;
+      padding: 16px; text-align: center;
+    }
+    #messages {
+      flex: 1; padding: 16px;
+      overflow-y: auto; background: #f6f7f9;
+    }
+    .msg { margin: 10px 0; padding: 10px 12px;
+      border-radius: 12px; max-width: 80%; word-wrap: break-word;
+    }
+    .user { background: #43cea2; color: #fff; margin-left: auto; }
+    .bot { background: #e9ecef; color: #333; margin-right: auto; }
+    footer {
+      display: flex; gap: 8px;
+      padding: 12px; border-top: 1px solid #e5e7eb;
+    }
+    input {
+      flex: 1; padding: 12px;
+      border: 1px solid #cbd5e1; border-radius: 10px;
+    }
+    button {
+      padding: 12px 18px; border: 0;
+      background: #43cea2; color: #fff;
+      border-radius: 10px; font-weight: 700;
+      cursor: pointer;
+    }
+    button:hover { filter: brightness(0.95); }
+    select {
+      margin-top: 10px; padding: 6px 10px;
+      border-radius: 8px; border: 1px solid #cbd5e1;
+    }
+  </style>
+</head>
+<body>
+  <div class="chat">
+    <header>
+      <h2>🤖 Chat IA Local</h2>
+      <div>Conectado vía Ollama</div>
+      <label for="model">Modelo:</label>
+      <select id="model">
+        <option value="deepseek-coder">DeepSeek Coder</option>
+        <option value="llama3">Llama 3</option>
+        <option value="phi3">Phi 3</option>
+      </select>
+    </header>
+
+    <div id="messages">
+      <div class="msg bot">¡Hola! Soy tu asistente local 👋</div>
+    </div>
+
+    <footer>
+      <input id="input" placeholder="Escribe un mensaje..." />
+      <button id="btn">Enviar</button>
+    </footer>
+  </div>
+
+<script>
+  const input = document.getElementById("input");
+  const btn = document.getElementById("btn");
+  const messages = document.getElementById("messages");
+  const modelSelect = document.getElementById("model");
+
+  async function sendMessage() {
+    const text = input.value.trim();
+    const model = modelSelect.value;
+    if (!text) return;
+
+    messages.innerHTML += `<div class="msg user">${text}</div>`;
+    input.value = "";
+
+    try {
+      const resp = await fetch("/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: text, model: model })
+      });
+
+      const data = await resp.json();
+      const answer = data.response || data.error || "Error al obtener respuesta";
+      messages.innerHTML += `<div class="msg bot">${answer}</div>`;
+      messages.scrollTop = messages.scrollHeight;
+    } catch (err) {
+      messages.innerHTML += `<div class="msg bot">⚠️ Error de conexión con Flask</div>`;
+    }
+  }
+
+  btn.onclick = sendMessage;
+  input.onkeydown = (e) => { if (e.key === "Enter") sendMessage(); };
+</script>
+</body>
+</html>

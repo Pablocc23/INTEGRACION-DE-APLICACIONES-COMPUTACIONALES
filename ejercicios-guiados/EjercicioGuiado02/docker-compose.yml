@@ -1,0 +1,25 @@
+# version: "3.8"
+services:
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    restart: unless-stopped
+
+  web:
+    image: flask-ollama-app:latest   # Usamos imagen ya construida para evitar el bug de buildx en Windows
+    container_name: flask-ollama-app
+    ports:
+      - "5000:5000"
+    environment:
+      - OLLAMA_API_URL=http://ollama:11434/api
+      - FLASK_ENV=development
+    depends_on:
+      - ollama
+    restart: unless-stopped
+
+volumes:
+  ollama_data:
