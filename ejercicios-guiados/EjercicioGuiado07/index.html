@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Cliente JWT + Libros</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <h1>Cliente Web — JWT + Libros</h1>
+    <div class="status">
+      <span id="apiStatus">API: desconocido</span>
+      <button id="openConfigBtn" class="btn secondary">Configurar</button>
+    </div>
+  </header>
+
+  <nav class="tabs">
+    <button data-tab="auth" class="active">Autenticación</button>
+    <button data-tab="libros">Libros</button>
+    <button data-tab="logs">Logs</button>
+  </nav>
+
+  <main>
+    <!-- TAB: Autenticación -->
+    <section id="auth" class="tab active">
+      <div class="card">
+        <h2>Registro</h2>
+        <form id="registerForm">
+          <div class="grid">
+            <label>Usuario
+              <input type="text" id="regUsername" required />
+            </label>
+            <label>Email
+              <input type="email" id="regEmail" required />
+            </label>
+            <label>Contraseña
+              <input type="password" id="regPassword" required />
+            </label>
+          </div>
+          <button type="submit" class="btn">Registrar</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <h2>Login</h2>
+        <form id="loginForm">
+          <div class="grid">
+            <label>Usuario
+              <input type="text" id="logUsername" required />
+            </label>
+            <label>Contraseña
+              <input type="password" id="logPassword" required />
+            </label>
+          </div>
+          <button type="submit" class="btn">Iniciar sesión</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <h2>Tokens</h2>
+        <div class="tokenBox">
+          <p><strong>Access Token:</strong></p>
+          <textarea id="accessTokenBox" readonly></textarea>
+          <p><strong>Refresh Token:</strong></p>
+          <textarea id="refreshTokenBox" readonly></textarea>
+        </div>
+
+        <div class="card">
+          <h2>Consultar usuario</h2>
+          <form id="userForm">
+            <label>Nombre de usuario:
+              <input type="text" id="userQuery" placeholder="ej: pablo" required />
+            </label>
+            <button type="submit" class="btn">Consultar /user/&lt;username&gt;</button>
+          </form>
+          <pre id="userResult" style="background:#0c1026;color:#dbe3ff;padding:12px;border-radius:10px;overflow:auto;height:160px;"></pre>
+        </div>
+
+        <div class="actions">
+          <button id="btnProfile" class="btn">/protected</button>
+          <button id="btnRefresh" class="btn secondary">/refresh</button>
+          <button id="btnClearTokens" class="btn danger">Borrar tokens</button>
+        </div>
+        <div class="decoded">
+          <h3>JWT decodificado</h3>
+          <pre id="jwtDecoded">{}</pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB: Libros -->
+    <section id="libros" class="tab">
+      <div class="card">
+        <h2>Catálogo de Libros</h2>
+        <div class="actions">
+          <input id="searchText" type="text" placeholder="Buscar por título o autor..." />
+          <button id="btnListBooks" class="btn">Listar libros</button>
+        </div>
+        <div class="tableWrap">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th><th>Título</th><th>Autor</th><th>Editorial</th><th>Año</th><th>Género</th><th>Formato</th>
+              </tr>
+            </thead>
+            <tbody id="booksTbody">
+              <tr><td colspan="7" style="text-align:center;color:#999;">Sin datos</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <small>Este módulo asume un endpoint configurable (p.ej. <code>/books</code> o <code>/libros/books</code>) que devuelve un arreglo de libros con joins de <em>Authors</em>, <em>Genres</em> y <em>Formats</em>. BD: <strong>Libros</strong>. :contentReference[oaicite:4]{index=4}</small>
+      </div>
+    </section>
+
+    <!-- TAB: Logs -->
+    <section id="logs" class="tab">
+      <div class="card">
+        <h2>Logs del cliente</h2>
+        <pre id="logBox" class="logBox"></pre>
+        <button id="btnClearLogs" class="btn danger">Limpiar logs</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- Ventana emergente de configuración -->
+  <dialog id="configDialog">
+    <form id="configForm" method="dialog">
+      <h2>Configurar IP, Puerto y Endpoints</h2>
+
+      <div class="grid">
+        <label>IP o dominio del microservicio
+          <input type="text" id="cfgIp" placeholder="34.42.102.133" required />
+        </label>
+        <label>Puerto
+          <input type="text" id="cfgPort" placeholder="5000" />
+        </label>
+      </div>
+
+      <h3>Endpoints Auth</h3>
+      <div class="grid">
+        <label>Registro
+          <input type="text" id="cfgRegister" placeholder="/register" />
+        </label>
+        <label>Login
+          <input type="text" id="cfgLogin" placeholder="/login" />
+        </label>
+        <label>Refresh
+          <input type="text" id="cfgRefresh" placeholder="/refresh" />
+        </label>
+        <label>Perfil protegido
+          <input type="text" id="cfgProfile" placeholder="/protected" />
+        </label>
+      </div>
+
+      <h3>Libros</h3>
+      <div class="grid">
+        <label>Endpoint Libros (GET)
+          <input type="text" id="cfgBooks" placeholder="/books" />
+        </label>
+      </div>
+
+      <menu>
+        <button value="cancel" class="btn secondary">Cancelar</button>
+        <button id="saveConfigBtn" value="default" class="btn">Guardar</button>
+      </menu>
+      <p class="note">
+        Esta configuración se guarda en <strong>localStorage</strong>, tal como pide el ejercicio (IP, puerto, microservicios y endpoints). :contentReference[oaicite:5]{index=5}
+      </p>
+    </form>
+  </dialog>
+
+  <script src="app.js"></script>
+</body>
+</html>
