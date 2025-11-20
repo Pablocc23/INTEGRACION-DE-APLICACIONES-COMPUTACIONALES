@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Libros + Imágenes (GCS) — Cliente Web</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <header class="topbar">
+    <h1>Libros + Imágenes (GCS) — Cliente Web</h1>
+    <div class="status">
+      <span id="apiStatus">API: desconocido</span>
+      <button id="openConfigBtn" class="btn secondary">Configurar</button>
+    </div>
+  </header>
+
+  <nav class="tabs">
+    <button data-tab="auth" class="active">Autenticación</button>
+    <button data-tab="libros">Libros</button>
+    <button data-tab="logs">Logs</button>
+  </nav>
+
+  <main>
+
+    <!-- =========================================================
+         TAB 1: AUTENTICACIÓN (NO SE MODIFICA)
+    ============================================================ -->
+    <section id="auth" class="tab active">
+      <div class="card">
+        <h2>Registro</h2>
+        <form id="registerForm">
+          <div class="grid">
+            <label>Usuario
+              <input type="text" id="regUsername" required />
+            </label>
+            <label>Email
+              <input type="email" id="regEmail" required />
+            </label>
+            <label>Contraseña
+              <input type="password" id="regPassword" required />
+            </label>
+          </div>
+          <button type="submit" class="btn">Registrar</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <h2>Login</h2>
+        <form id="loginForm">
+          <div class="grid">
+            <label>Usuario
+              <input type="text" id="logUsername" required />
+            </label>
+            <label>Contraseña
+              <input type="password" id="logPassword" required />
+            </label>
+          </div>
+          <button type="submit" class="btn">Iniciar sesión</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <h2>Tokens</h2>
+        <p>Access Token:</p>
+        <textarea id="accessTokenBox" readonly></textarea>
+
+        <p>Refresh Token:</p>
+        <textarea id="refreshTokenBox" readonly></textarea>
+
+        <div class="actions">
+          <button id="btnProfile" class="btn">/protected</button>
+          <button id="btnRefresh" class="btn secondary">/refresh</button>
+          <button id="btnClearTokens" class="btn danger">Borrar tokens</button>
+        </div>
+
+        <h3>JWT decodificado</h3>
+        <pre id="jwtDecoded">{}</pre>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         TAB 2: LIBROS + IMÁGENES
+    ============================================================ -->
+    <section id="libros" class="tab">
+      <div class="card">
+        <h2>Catálogo de Libros</h2>
+        <div class="actions">
+          <input id="searchText" type="text" placeholder="Buscar libro..." />
+          <button id="btnListBooks" class="btn">Listar libros</button>
+        </div>
+
+        <div class="tableWrap">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th><th>Título</th><th>Autor</th><th>Año</th><th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="booksTbody">
+              <tr><td colspan="5" style="text-align:center;color:#999;">No hay libros</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- PANEL DE IMÁGENES POR LIBRO -->
+      <div id="imagesPanel" class="card" style="display:none;">
+        <h2>Imágenes del libro: <span id="panelBookTitle"></span></h2>
+
+        <h3>Subir nuevas imágenes</h3>
+        <input id="fileImages" type="file" multiple accept="image/*" />
+        <button id="btnUploadImages" class="btn">Subir</button>
+
+        <div id="previewContainer" class="previewArea"></div>
+
+        <h3>Imágenes ya existentes</h3>
+        <div id="bookImages" class="imagesGrid"></div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         TAB 3: LOGS
+    ============================================================ -->
+    <section id="logs" class="tab">
+      <div class="card">
+        <h2>Logs del cliente</h2>
+        <pre id="logBox" class="logBox"></pre>
+        <button id="btnClearLogs" class="btn danger">Limpiar logs</button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============================================================
+       DIALOG DE CONFIGURACIÓN (MISMO QUE YA TENÍAS)
+  =============================================================== -->
+  <dialog id="configDialog">
+    <form id="configForm" method="dialog">
+      <h2>Configurar servidor</h2>
+
+      <div class="grid">
+        <label>IP / Dominio:
+          <input id="cfgIp" type="text" required />
+        </label>
+        <label>Puerto:
+          <input id="cfgPort" type="text" />
+        </label>
+      </div>
+
+      <h3>Endpoints</h3>
+      <div class="grid">
+        <label>/register  <input id="cfgRegister" /></label>
+        <label>/login     <input id="cfgLogin" /></label>
+        <label>/refresh   <input id="cfgRefresh" /></label>
+        <label>/protected <input id="cfgProfile" /></label>
+        <label>/books     <input id="cfgBooks" /></label>
+      </div>
+
+      <menu>
+        <button value="cancel" class="btn secondary">Cancelar</button>
+        <button id="saveConfigBtn" class="btn">Guardar</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <script src="app.js"></script>
+</body>
+</html>
