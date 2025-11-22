@@ -1,0 +1,116 @@
+/*M!999999\- enable the sandbox mode */ 
+-- MariaDB dump 10.19  Distrib 10.5.27-MariaDB, for Linux (x86_64)
+--
+-- Host: localhost    Database: autenticacion_jwt
+-- ------------------------------------------------------
+-- Server version	10.5.27-MariaDB
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `refresh_tokens`
+--
+
+DROP TABLE IF EXISTS `refresh_tokens`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `refresh_tokens` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `refresh_token` varchar(1000) DEFAULT NULL,
+  `expires_at` datetime NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `is_revoked` tinyint(1) DEFAULT 0,
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `refresh_tokens_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `refresh_tokens`
+--
+
+LOCK TABLES `refresh_tokens` WRITE;
+/*!40000 ALTER TABLE `refresh_tokens` DISABLE KEYS */;
+INSERT INTO `refresh_tokens` VALUES (1,1,'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc1OTQ0MzcwMywianRpIjoiYjY4N2YwYzItNTc2Mi00MmI3LWJjNGMtZTZhZDI5MWEzMDFjIiwidHlwZSI6InJlZnJlc2giLCJzdWIiOjEsIm5iZiI6MTc1OTQ0MzcwMywiY3NyZiI6ImRjOGNjMGI3LWY0ODEtNDM1NC1hNGE1LTEyOGMzZDVhMWMzMCIsImV4cCI6MTc2MDA0ODUwM30.2mGXoR7iLklZ-P7haBxw1Dkh-bSQwOlRWSKCjcBQDKE','2025-10-09 22:21:43','2025-10-02 22:21:43',0),(2,1,'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc1OTQ0NDE2NiwianRpIjoiNWQ0NGFlMWQtZjRhYS00NWNjLWJiZTYtODU0MGVkYTNjZmE4IiwidHlwZSI6InJlZnJlc2giLCJzdWIiOjEsIm5iZiI6MTc1OTQ0NDE2NiwiY3NyZiI6ImQyOGU2YzRjLWRiZmUtNDkzOC04YWUxLTA4MDIxNDEyMzgzZCIsImV4cCI6MTc2MDA0ODk2Nn0.UNKVwbwIEoFMIFMhfXVllSvlSvgrX_mUdNlydGE7Cco','2025-10-09 22:29:26','2025-10-02 22:29:26',0),(3,1,'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc1OTQ0NDg5MSwianRpIjoiMjU3MTFiMjctYmI0NC00ZWJjLWI4ZTctMzlkNzNjN2ZiNGI0IiwidHlwZSI6InJlZnJlc2giLCJzdWIiOjEsIm5iZiI6MTc1OTQ0NDg5MSwiY3NyZiI6IjIzMmI1NDRmLWUwMjAtNDcwZS05OTllLTBmYjJhZTE5YmZkYyIsImV4cCI6MTc2MDA0OTY5MX0.OMvAQbfexkXAKdGuFdfR8Rf4NJLbrjE32pb6zsIsQvw','2025-10-09 22:41:31','2025-10-02 22:41:31',0),(4,1,'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc1OTQ0NTM2OCwianRpIjoiYjY4Y2Q1YzYtYjVkNC00OTFlLWIzYzQtNDZmYTZmYzNjNmRiIiwidHlwZSI6InJlZnJlc2giLCJzdWIiOjEsIm5iZiI6MTc1OTQ0NTM2OCwiY3NyZiI6IjQyMTQ1YTlmLWY3YmItNDQ4NC1iYTBhLThiZWM3ZDI4NjE0NiIsImV4cCI6MTc2MDA1MDE2OH0.kU14YJrRUiGrnu4TqVePh5J7rp2oer7F3pM3wuMKrTo','2025-10-09 22:49:28','2025-10-02 22:49:28',0),(5,1,'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc1OTQ0NTYzMiwianRpIjoiYmE1NWIxMTQtYTA4ZC00Mjg5LWExZTUtOGJhMzE3NGI5MDdmIiwidHlwZSI6InJlZnJlc2giLCJzdWIiOiIxIiwibmJmIjoxNzU5NDQ1NjMyLCJjc3JmIjoiYjRkYmViYTktZmM4Zi00MjI3LTg5NGUtYjEzMzI2OGE1YmRmIiwiZXhwIjoxNzYwMDUwNDMyfQ.79L7alwSY9HDYd1GuXpyE2YjHwDoB_IQwL5VJw1EOoI','2025-10-09 22:53:52','2025-10-02 22:53:52',0);
+/*!40000 ALTER TABLE `refresh_tokens` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tokens`
+--
+
+DROP TABLE IF EXISTS `tokens`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tokens` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `token` varchar(1000) DEFAULT NULL,
+  `expires_at` datetime NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `tokens_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tokens`
+--
+
+LOCK TABLES `tokens` WRITE;
+/*!40000 ALTER TABLE `tokens` DISABLE KEYS */;
+INSERT INTO `tokens` VALUES (1,1,'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc1OTQ0MzcwMywianRpIjoiMWNhYjc2ZDAtNDI1YS00Y2I1LWE2MDctZmExZDEzMmU4MDEzIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6MSwibmJmIjoxNzU5NDQzNzAzLCJjc3JmIjoiYzIyMTVlYTUtODIzOC00Y2E3LTljNmQtOGJkZDdhNzUwYzE2IiwiZXhwIjoxNzU5NDQ0NjAzfQ.XBJXF0nYi3r8vGzYvIj1Vibg-YcRgIpeVrrvqq_dOjc','2025-10-02 22:36:43','2025-10-02 22:21:43'),(2,1,'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc1OTQ0NDE2NiwianRpIjoiZjQxOTJhMWQtMDY4My00YzYxLWIzNjMtMTY0NTRkZGNkNDQ2IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6MSwibmJmIjoxNzU5NDQ0MTY2LCJjc3JmIjoiMTk0Mjk2MmYtNDIwZC00ZGJmLTkyYzEtNjQ3MDRmM2MwMmEwIiwiZXhwIjoxNzU5NDQ1MDY2fQ.s8yk9n0tMUhgAgaIGziBG5eSuYFjAtoRWzkJUDYxtL4','2025-10-02 22:44:26','2025-10-02 22:29:26'),(3,1,'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc1OTQ0NDg5MSwianRpIjoiN2JjMDgzMTktMjAwYi00YjZmLWI1NjQtMTJlOGVkMDdlMjliIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6MSwibmJmIjoxNzU5NDQ0ODkxLCJjc3JmIjoiMzNjMDFkZDMtMTgwYy00YTdmLTgxZDYtNTgwNjc4ODUwNzcyIiwiZXhwIjoxNzU5NDQ1NzkxfQ.0dx7MF9LZSalVO6o5Ku05cVu0DeC3USXRd7iXOkUslw','2025-10-02 22:56:31','2025-10-02 22:41:31'),(4,1,'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc1OTQ0NTM2OCwianRpIjoiZGVkNjI0ODUtOWViMi00YThlLWE5YzMtNTdiNmM0MThjN2ZmIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6MSwibmJmIjoxNzU5NDQ1MzY4LCJjc3JmIjoiNDUyM2ExZDYtZmQwZS00MWMwLTk5ZmItODhlNDk2OWIzNTJlIiwiZXhwIjoxNzU5NDQ2MjY4fQ.79Q9jWVVqyfiqwNEsmUvw3Snr5VU0MXsEDE7ZF_uP6Q','2025-10-02 23:04:28','2025-10-02 22:49:28'),(5,1,'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc1OTQ0NTYzMiwianRpIjoiOGZhMjNmYWYtZDBkNS00OWExLTljMDEtMDczNzA0OWM4Y2ExIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjEiLCJuYmYiOjE3NTk0NDU2MzIsImNzcmYiOiJkNjcxODM0Ny0zMjJkLTQ1ZjEtYmQwMy0zMDc0YmI3OWQ2YWMiLCJleHAiOjE3NTk0NDY1MzJ9.McWMt14CLfvkfdGKKmD4I_hKfxliD8KwYOD2M5lCFFE','2025-10-02 23:08:52','2025-10-02 22:53:52');
+/*!40000 ALTER TABLE `tokens` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `usuarios`
+--
+
+DROP TABLE IF EXISTS `usuarios`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `usuarios` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `username` varchar(100) NOT NULL,
+  `email` varchar(150) NOT NULL,
+  `password_hash` varchar(255) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `username` (`username`),
+  UNIQUE KEY `email` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `usuarios`
+--
+
+LOCK TABLES `usuarios` WRITE;
+/*!40000 ALTER TABLE `usuarios` DISABLE KEYS */;
+INSERT INTO `usuarios` VALUES (1,'pablo','pablo@test.com','$5$rounds=535000$H.2IheyC90EVLFE5$3mJC9q/4OVkKwAWJpU.JqP/N0hNY2E8uJIuS6PLMmq/','2025-10-02 22:21:10');
+/*!40000 ALTER TABLE `usuarios` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2025-10-03  0:24:11
